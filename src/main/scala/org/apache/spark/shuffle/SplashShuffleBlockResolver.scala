@@ -21,12 +21,13 @@
 package org.apache.spark.shuffle
 
 import java.io._
-import java.nio.file.{FileAlreadyExistsException, Path, Paths}
+import java.nio.file.FileAlreadyExistsException
 import java.security.MessageDigest
 
 import com.google.common.annotations.VisibleForTesting
 import com.memverge.splash.{ShuffleFile, StorageFactory, StorageFactoryHolder, TmpShuffleFile}
 import org.apache.commons.lang3.StringUtils
+import org.apache.hadoop.fs.Path
 import org.apache.spark.SparkEnv
 import org.apache.spark.internal.Logging
 import org.apache.spark.network.buffer.ManagedBuffer
@@ -72,16 +73,18 @@ class SplashShuffleBlockResolver(appId: String)
 
   private def dataFilename(
       shuffleId: ShuffleId, mapId: ShuffleId, reducerId: ShuffleId): String =
-    Paths.get(s"$shuffleFolder",
+    String.format("%s/%s/%s",
+      s"$shuffleFolder",
       s"shuffle_$shuffleId",
       s"shuffle_${shuffleId}_${mapId}_$reducerId.data"
-    ).toString
+    )
 
-  private def indexFilename(shuffleId: ShuffleId, mapId: ShuffleId) =
-    Paths.get(s"$shuffleFolder",
+  private def indexFilename(shuffleId: ShuffleId, mapId: ShuffleId): String =
+    String.format("%s/%s/%s",
+      s"$shuffleFolder",
       s"shuffle_$shuffleId",
       s"shuffle_${shuffleId}_${mapId}_$NOOP_REDUCE_ID.index"
-    ).toString
+    )
 
   private def getDataFile(shuffleBlockId: ShuffleBlockId): ShuffleFile =
     shuffleCache.getDataFile(shuffleBlockId)
@@ -179,8 +182,8 @@ class SplashShuffleBlockResolver(appId: String)
     dumpFolder
   }
 
-  def getDumpFilePath(blockId: BlockId): Path =
-    Paths.get(getDumpFolder, s"$blockId.dump")
+  def getDumpFilePath(blockId: BlockId): java.nio.file.Path =
+    java.nio.file.Paths.get(getDumpFolder, s"$blockId.dump")
 
   def dump(blockId: BlockId): String = {
     val dumpFilePath = getDumpFilePath(blockId)

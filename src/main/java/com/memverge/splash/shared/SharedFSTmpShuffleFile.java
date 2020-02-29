@@ -17,7 +17,6 @@ package com.memverge.splash.shared;
 
 import com.google.common.io.Closeables;
 import com.memverge.splash.ShuffleFile;
-import com.memverge.splash.TempFolder;
 import com.memverge.splash.TmpShuffleFile;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

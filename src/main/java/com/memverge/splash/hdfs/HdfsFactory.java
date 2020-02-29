@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.memverge.splash.shared;
+package com.memverge.splash.hdfs;
 
 import com.memverge.splash.ShuffleFile;
 import com.memverge.splash.ShuffleListener;
@@ -23,33 +23,33 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
-public class SharedFSFactory implements StorageFactory {
+public class HdfsFactory implements StorageFactory {
 
-  private TempFolder folder = TempFolder.getInstance();
+  private HdfsTempFolder folder = HdfsTempFolder.getInstance();
 
   @Override
   public TmpShuffleFile makeSpillFile() throws IOException {
-    return SharedFSTmpShuffleFile.make();
+    return HdfsTmpShuffleFile.make();
   }
 
   @Override
   public TmpShuffleFile makeDataFile(String path) throws IOException {
-    return SharedFSTmpShuffleFile.make(getDataFile(path));
+    return HdfsTmpShuffleFile.make(getDataFile(path));
   }
 
   @Override
   public TmpShuffleFile makeIndexFile(String path) throws IOException {
-    return SharedFSTmpShuffleFile.make(new SharedFSShuffleFile(path));
+    return HdfsTmpShuffleFile.make(new HdfsShuffleFile(path));
   }
 
   @Override
   public ShuffleFile getDataFile(String path) {
-    return new SharedFSShuffleFile(path);
+    return new HdfsShuffleFile(path);
   }
 
   @Override
   public ShuffleFile getIndexFile(String path) {
-    return new SharedFSShuffleFile(path);
+    return new HdfsShuffleFile(path);
   }
 
   @Override
